@@ -8,15 +8,19 @@ import Score from './Score';
 
 class Game extends Component{
 
-    state = {
-        numCorrect: 0,
-        numQuestions: 0,
-        value1: 0,
-        value2: 0,
-        value3: 0,
-        proposedAnswer: 0
-      }
-
+    constructor(props){
+        super(props);
+        this.state = {
+            numCorrect: 0,
+            numQuestions: 0,
+            value1: 0,
+            value2: 0,
+            value3: 0,
+            proposedAnswer: 0
+        }
+        this.handleAnswer = this.handleAnswer.bind(this);
+    }
+    
     componentDidMount(){
         this.generateValues();
     }
@@ -37,16 +41,13 @@ class Game extends Component{
     }  
 
     answerIsRight(answeredTrue){
-        console.log('answerIsRight');
         if( answeredTrue==='true')            
-            return this.state.proposedAnswer === this.state.value1 + this.state.value2 + this.state.value3;
+            return this.state.proposedAnswer === (this.state.value1 + this.state.value2 + this.state.value3);
         else 
-            return this.state.proposedAnswer !== this.state.value1 + this.state.value2 + this.state.value3;   
-
+            return this.state.proposedAnswer !== (this.state.value1 + this.state.value2 + this.state.value3);   
     }
 
     computeRightAnswer(){
-        console.log('computeRightAnswer');
         this.setState(function(currentState){
             return{
                     numCorrect: currentState.numCorrect + 1,
@@ -56,27 +57,26 @@ class Game extends Component{
     }
 
     computeWrongAnswer(){
-
-        console.log('computeWrongAnswer');
-
         this.setState(function(currentState){
             return{numQuestions: currentState.numQuestions + 1}
         });
     }
 
-    computeAnswer(event){
-        const answer = event.target.name;
+    handleAnswer(e){
+        const answer = e.target.name;
         console.log('computeAnswer');
-        console.log('answer:');
+        console.log('answer:' );
         console.log(answer);
 
-        if( (answer ==='true' && this.answerIsRight(answer)) || (answer ==='false' && !this.answerIsRight(answer)) ){
-                this.computeRightAnswer();
+        const self = this;
+
+        if ((answer === 'true' && self.answerIsRight(answer)) || (answer === 'false' && !self.answerIsRight(answer))) {
+            self.computeRightAnswer();
             }
             else{
-                this.computeWrongAnswer();
+            self.computeWrongAnswer();
             }
-            this.generateValues();
+        self.generateValues();
     }
 
     render(){
@@ -86,8 +86,8 @@ class Game extends Component{
           <div className="equation">
             <p className="text">{`${this.state.value1} + ${this.state.value2} + ${this.state.value3} = ${this.state.proposedAnswer}`}</p>
           </div>
-          <button onClick={this.computeAnswer} name='true'>True</button>
-          <button onClick={this.computeAnswer} name='false'>False</button>
+          <button onClick={this.handleAnswer} name='true'>True</button>
+          <button onClick={this.handleAnswer} name='false'>False</button>
           <Score numCorrect={this.state.numCorrect} numQuestions={this.state.numQuestions} />
         </div>
     )
