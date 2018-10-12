@@ -64,10 +64,6 @@ class Game extends Component{
 
     handleAnswer(e){
         const answer = e.target.name;
-        console.log('computeAnswer');
-        console.log('answer:' );
-        console.log(answer);
-
         const self = this;
 
         if ((answer === 'true' && self.answerIsRight(answer)) || (answer === 'false' && !self.answerIsRight(answer))) {
